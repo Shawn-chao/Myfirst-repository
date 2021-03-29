@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.StudentDao" >
+    <resultMap id="studentResultMap" type="com.myba02.Student">
+        <id property="id" column="ID"/>
+        <result property="na" column="name"/>
+        <result property="dept" column="dept_name"/>
+        <result property="tot" column="tot_cred"/>
+        <result property="birth" column="birthday"/>
+    </resultMap>
+    <select id="findallStudends" resultMap="studentResultMap">
+        select
+          * from student
+    </select>
+    <select id="findStudendsByname" resultMap="studentResultMap">
+        select * from student where name=#{una}
+    </select>
+    <select id="findstudentByid" resultMap="studentResultMap">
+        select * from student where ID=#{sid}
+    </select>
+    <insert id="insertstudent" parameterType="com.myba02.Student">
+        insert into student(ID,name,dept_name,tot_cred,birthday) values (#{id},#{na},#{dept},#{tot},#{birth})
+    </insert>
+    <delete id="deletestudentByid" parameterType="com.myba02.Student">
+        delete from student where id=#{sid}
+    </delete>
+    <delete id="deletestudentByname" parameterType="com.myba02.Student">
+        delete from student where name=#{sna}
+    </delete>
+    <update id="updatestudent" parameterType="com.myba02.Student">
+        update student set name =#{na},dept_name=#{dept},tot_cred=#{tot},birthday=#{birth} where ID=#{id}
+    </update>
+    <select id="findStudentbyChar" resultMap="studentResultMap">
+        select * from student where name like '%' #{name} '%'
+    </select>
+    <select id="findStudentByDept" resultMap="studentResultMap">
+        select * from student where dept_name like '%' #{dept} '%'
+    </select>
+    <select id="findStudentsif" resultMap="studentResultMap">
+        select * from student
+        <where>
+            <if test="na!=null and na!=''">
+                and name like '%' #{na} '%'
+            </if>
+            <if test="dept!=null and dept!=''">
+                and dept_name like '%' #{dept} '%'
+            </if>
+            <if test="tot>0">
+                and tot_cred = #{tot}
+            </if>
+        </where>
+    </select>
+    <select id="findStudentsMap" resultMap="studentResultMap" parameterType="java.util.Map">
+        select * from student
+        <where>
+            <if test="na!=null and na!=''">
+                and name like '%' #{na} '%'
+            </if>
+            <if test="dept!=null and dept!=''">
+                and dept_name like '%' #{dept} '%'
+            </if>
+            <if test="totStart>0 and totEnd>0">
+                and tot_cred between #{totStart} and #{totEnd}
+            </if>
+        </where>
+    </select>
+</mapper>
